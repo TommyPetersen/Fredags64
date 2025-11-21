@@ -9,7 +9,7 @@ kontrollogik:
 	adc #5
 	sec
 	sbc #10
-	cmp #2
+	cmp #5
 	bne deErIkkeEns
 deErEns:
 	jsr begyndIndlaes1

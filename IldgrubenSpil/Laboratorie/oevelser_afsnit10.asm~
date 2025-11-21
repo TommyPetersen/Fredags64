@@ -1,0 +1,64 @@
+	BasicUpstart2(aritmetik)
+
+	// *** Brug af ADC, CLC, SBC, SEC ***
+aritmetik:
+	lda #10
+	clc
+	adc #5
+
+	sec
+	sbc #10
+
+	cmp #5
+	beq detErFem
+
+	lda #0
+	sta $d020
+	rts
+detErFem:
+	lda #1
+	sta $d020
+	rts
+
+	
+	// *** Brug af BNE, CPY ***
+opsaetIndlaes:
+	ldx #0	//x := 0
+indlaes: //Indlaes fra stamtabel til farvetabel
+	lda stamtabel,x
+	sta arbejdstabel,x
+	inx
+	cpx #9
+	bne indlaes
+
+opsaetKantfarve:
+	ldy #0	//y := 0
+kopier: //Kopiér fra arbejdstabel til kantfarve
+	lda arbejdstabel,y
+	sta $d020
+	iny
+	cpy #9
+	bne kopier
+	jmp opsaetKantfarve
+	
+	//Farvetabeller
+arbejdstabel:
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+	.byte 0
+stamtabel:
+	.byte 3
+	.byte 3
+	.byte 3
+	.byte 6
+	.byte 6
+	.byte 6
+	.byte 9
+	.byte 9
+	.byte 9

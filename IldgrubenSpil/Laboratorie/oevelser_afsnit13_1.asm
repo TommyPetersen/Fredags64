@@ -16,114 +16,50 @@ opsaetSprittere:
         //Placeringer:
         lda #%11000001
         sta $D010    //Bit9
+        //Spritterkoordinaters begyndelsesadresse:
+        lda #$00
+        sta $FB
+        lda #$D0
+        sta $FC
+        //Spritterkoordinater indlaeses:
+        ldy #0
+koordinatloekke:
+        lda spritterkoordinater,y
+        sta ($FB),y
+        iny
+        cpy #16
+        bne koordinatloekke
+
+        //Sprittermoenstres begyndelsesadresse:
+        lda #$F8
+        sta $FB
+        lda #$07
+        sta $FC
+        //Sprittermoenstre indlaeses:
+        ldy #0
+moensterloekke:
+        lda moensteradresser,y
+        sta ($FB),y
+        iny
+        cpy #8
+        bne moensterloekke
         
-        lda #16
-        sta $D000    //Spr0-x
-
-        lda #67
-        sta $D001    //Spr0-y
-
-        lda #55
-        sta $D002    //Spr1-x
-
-        lda #100
-        sta $D003    //Spr1-y
-
-        lda #43
-        sta $D004    //Spr2-x
-
-        lda #110
-        sta $D005    //Spr2-y
-
-        lda #66
-        sta $D006    //Spr3-x
-
-        lda #110
-        sta $D007    //Spr3-y
-
-        lda #200
-        sta $D008    //Spr4-x
-
-        lda #170
-        sta $D009    //Spr4-y
-
-        lda #230
-        sta $D00A    //Spr5-x
-
-        lda #170
-        sta $D00B    //Spr5-y
-
-        lda #5
-        sta $D00C    //Spr6-x
-
-        lda #170
-        sta $D00D    //Spr6-y
-
-        lda #35
-        sta $D00E    //Spr7-x
-
-        lda #170
-        sta $D00F    //Spr7-y
-
-        //Moensterreferencer:
-        lda #$80
-        sta $07F8    //Spr0
-       
-        lda #$81
-        sta $07F9    //Spr1
-
-        lda #$82
-        sta $07FA    //Spr2
-
-        lda #$83
-        sta $07FB    //Spr3
-
-        lda #$80
-        sta $07FC    //Spr4
-
-        lda #$81
-        sta $07FD    //Spr5
-
-        lda #$82
-        sta $07FE    //Spr6
-
-        lda #$83
-        sta $07FF    //Spr7
-
         //Flerfarve:
         lda #%11001100
         sta $D01C
-
-        //Farvevalg:
-        lda #13
-        sta $D025  //Flr01
-
-        lda #12
-        sta $D026  //Flr11
-        
-        lda #3
-        sta $D027  //Spr0
-
-        lda #15
-        sta $D028  //Spr1
-
-        lda #0
-        sta $D029  //Spr2
-
-        lda #1
-        sta $D02A  //Spr3
-
-        lda #3
-        sta $D02B  //Spr4
-
-        lda #15
-        sta $D02C  //Spr5
-
-        lda #0
-        sta $D02D  //Spr6
-
-        lda #1
-        sta $D02E  //Spr7
+        //Spritterfarvernes begyndelsesadresse:
+        lda #$25
+        sta $FB
+        lda #$D0
+        sta $FC
+        //Spritterfarver indlaeses:
+        ldy #0
+farveloekke:
+        lda spritterfarver,y
+        sta ($FB),y
+        iny
+        cpy #10
+        bne farveloekke
 
         //Aktiveringer:
         lda #%11111111
@@ -134,6 +70,12 @@ opsaetSprittere:
         // ***************
         // *** D A T A ***
         // ***************
+spritterkoordinater:
+        .byte 16,67,55,100,43,110,66,110,200,170,230,170,5,170,35,170
+moensteradresser:
+        .byte $80,$81,$82,$83,$80,$81,$82,$83
+spritterfarver:
+        .byte 13,12,3,15,0,1,3,15,0,1
 *=$2000 "Sprittere"
 spritter0:
         .byte %11111111,%11111111,%11111111

@@ -1,81 +1,73 @@
-        BasicUpstart2(opsaetning)
+        BasicUpstart2(hovedprg)
 
         // *******************************
         // *** H O V E D P R O G R A M ***
         // *******************************
-opsaetning:     
-        cld
 hovedprg:
-        jsr opsaetSprittere
+        cld
+        ldx #0
+        jsr opsaetKoordinater
+        jsr opsaetMoenstre
+        jsr opsaetFarver
+        jsr aktiverSprittere
         rts
 
         // ***********************************
         // *** H J A E L P E R U T I N E R ***
         // ***********************************
-opsaetSprittere:
-        //Placeringer:
+opsaetKoordinater:
         lda #%11000001
         sta $D010    //Bit9
-        //Spritterkoordinaters begyndelsesadresse:
         lda #$00
         sta $FB
         lda #$D0
         sta $FC
-        //Spritterkoordinater indlaeses:
-        ldy #0
-koordinatloekke:
-        lda spritterkoordinater,y
-        sta ($FB),y
-        iny
-        cpy #16
-        bne koordinatloekke
-
-        //Sprittermoenstres begyndelsesadresse:
+        lda #16
+        sta $FD
+        jsr faellesOpsaetningsrutine
+        rts
+opsaetMoenstre: 
         lda #$F8
         sta $FB
         lda #$07
         sta $FC
-        //Sprittermoenstre indlaeses:
-        ldy #0
-moensterloekke:
-        lda moensteradresser,y
-        sta ($FB),y
-        iny
-        cpy #8
-        bne moensterloekke
-        
-        //Flerfarve:
+        lda #8
+        sta $FD
+        jsr faellesOpsaetningsrutine
+        rts
+opsaetFarver:   
         lda #%11001100
         sta $D01C
-        //Spritterfarvernes begyndelsesadresse:
         lda #$25
         sta $FB
         lda #$D0
         sta $FC
-        //Spritterfarver indlaeses:
-        ldy #0
-farveloekke:
-        lda spritterfarver,y
-        sta ($FB),y
-        iny
-        cpy #10
-        bne farveloekke
-
-        //Aktiveringer:
+        lda #10
+        sta $FD
+        jsr faellesOpsaetningsrutine
+        rts
+aktiverSprittere:       
         lda #%11111111
         sta $D015
-
+        rts
+faellesOpsaetningsrutine:      
+        ldy #0
+opsaetningsloekke:
+        lda opsaetningsdata,x
+        sta ($FB),y
+        inx
+        iny
+        cpy $FD
+        bne opsaetningsloekke
         rts
         
         // ***************
         // *** D A T A ***
         // ***************
-spritterkoordinater:
-        .byte 16,67,55,100,43,110,66,110,200,170,230,170,5,170,35,170
-moensteradresser:
-        .byte $80,$81,$82,$83,$80,$81,$82,$83
-spritterfarver:
-        .byte 13,12,3,15,0,1,3,15,0,1
+opsaetningsdata:        
+        .byte 16,67,55,100,43,110,66,110,200,170,230,170,5,170,35,170 // spritterkoordinater
+        .byte $80,$81,$82,$83,$80,$81,$82,$83 // moensteradresser
+        .byte 13,12,3,15,0,1,3,15,0,1 // spritterfarver
 *=$2000 "Sprittere"
 spritter0:
         .byte %11111111,%11111111,%11111111

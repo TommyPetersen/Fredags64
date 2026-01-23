@@ -6,51 +6,36 @@
 hovedprg:
         cld
         ldx #0
-        jsr opsaetKoordinater
-        jsr opsaetMoenstre
-        jsr opsaetFarver
-        jsr aktiverSprittere
+        jsr opsaetSprittere
         rts
 
         // ***********************************
         // *** H J A E L P E R U T I N E R ***
         // ***********************************
-opsaetKoordinater:
-        lda #%11000001
-        sta $D010    //Bit9
-        lda #$00
-        sta $FB
-        lda #$D0
-        sta $FC
-        lda #16
-        sta $FD
-        jsr faellesOpsaetningsrutine
-        rts
-opsaetMoenstre: 
-        lda #$F8
-        sta $FB
-        lda #$07
-        sta $FC
-        lda #8
-        sta $FD
-        jsr faellesOpsaetningsrutine
-        rts
-opsaetFarver:   
-        lda #%11001100
-        sta $D01C
-        lda #$25
-        sta $FB
-        lda #$D0
-        sta $FC
-        lda #10
-        sta $FD
-        jsr faellesOpsaetningsrutine
-        rts
-aktiverSprittere:       
-        lda #%11111111
+opsaetSprittere:        
+opsaetBitmoenstre:      
+        lda #%11111111  // spritteraktiveringer
         sta $D015
-        rts
-faellesOpsaetningsrutine:      
+        lda #%11001100  // flerfarver
+        sta $D01C
+        lda #%11000001  // bit9
+        sta $D010
+opsaetKoordinater:
+        ldy #0
+        jsr faellesOpsaetningsrutine
+opsaetMoenstre: 
+        ldy #1
+        jsr faellesOpsaetningsrutine
+opsaetFarver:   
+        ldy #2
+        jsr faellesOpsaetningsrutine
+faellesOpsaetningsrutine:
+        lda startadresserLaveByte,y
+        sta $FB
+        lda startadresserHoejeByte,y
+        sta $FC
+        lda iterationsgraenser,y
+        sta $FD
         ldy #0
 opsaetningsloekke:
         lda opsaetningsdata,x
@@ -64,6 +49,12 @@ opsaetningsloekke:
         // ***************
         // *** D A T A ***
         // ***************
+startadresserLaveByte:
+        .byte $00,$F8,$25
+startadresserHoejeByte:
+        .byte $D0,$07,$D0
+iterationsgraenser:    
+        .byte 16,8,10
 opsaetningsdata:        
         .byte 16,67,55,100,43,110,66,110,200,170,230,170,5,170,35,170 // spritterkoordinater
         .byte $80,$81,$82,$83,$80,$81,$82,$83 // moensteradresser

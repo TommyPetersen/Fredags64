@@ -1,58 +1,51 @@
         BasicUpstart2(hovedprg)
-
         // *******************************
         // *** H O V E D P R O G R A M ***
         // *******************************
 hovedprg:
         cld
-        ldx #0
-        jsr opsaetSprittere
-        rts
-
-        // ***********************************
-        // *** H J A E L P E R U T I N E R ***
-        // ***********************************
-opsaetSprittere:        
-opsaetBitmoenstre:      
         lda #%11111111  // spritteraktiveringer
         sta $D015
         lda #%11001100  // flerfarver
         sta $D01C
         lda #%11000001  // bit9
         sta $D010
-opsaetKoordinater:
+        ldx #0
         ldy #0
-        jsr faellesOpsaetningsrutine
-opsaetMoenstre: 
-        ldy #1
-        jsr faellesOpsaetningsrutine
-opsaetFarver:   
-        ldy #2
-        jsr faellesOpsaetningsrutine
-faellesOpsaetningsrutine:
+opsaetAspekter:
+        jsr opsaetningsrutine
+        iny
+        cpy #3
+        bne opsaetAspekter
+        rts
+        // ***********************************
+        // *** H J A E L P E R U T I N E R ***
+        // ***********************************
+opsaetningsrutine:
         lda startadresserLaveByte,y
         sta $FB
         lda startadresserHoejeByte,y
         sta $FC
         lda iterationsgraenser,y
         sta $FD
+        sty $FE
         ldy #0
 opsaetningsloekke:
         lda opsaetningsdata,x
         sta ($FB),y
-        inx
         iny
+        inx
         cpy $FD
         bne opsaetningsloekke
-        rts
-        
+        ldy $FE
+        rts       
         // ***************
         // *** D A T A ***
         // ***************
 startadresserLaveByte:
         .byte $00,$F8,$25
 startadresserHoejeByte:
-        .byte $D0,$07,$D0
+        .byte $D0,$07,$D0  // $D000: Koordinatadresser, $07F8: Moensteradresser, $D025: Farveadresser
 iterationsgraenser:    
         .byte 16,8,10
 opsaetningsdata:        

@@ -4,75 +4,65 @@
         .label GRAA = 12
         .label RENS_SKAERM = $e544
         .label RAEKKENR = 6
-        .label KOLONNENR = 23
+        .label KOLONNENR = 16
         .label NUL = 48
-        .label LAGERADRESSE = $dc00
+        .label STYREPIND2ADRESSE = $dc00
         
         // *******************************
         // *** H O V E D P R O G R A M ***
         // *******************************
 opsaetning:     
-        jsr RENS_SKAERM
         cld
+        jsr RENS_SKAERM
+        jsr beregnTegnOgFarveAdresser
+        jsr gemTegnOgFarveAdresser
+        
 opsaetningA:
-        lda #0
+        lda #8
         sta bitnummer
-        lda #RAEKKENR
-        sta raekkenr
-hovedprgA:
-        jsr nulstilSkaermafsaet
-        jsr beregnSkaermafsaet
-        jsr kopierSkaermafsaet
-        jsr adderTegnadrBegynd
-        jsr adderFarveadrBegynd
-kolonnenavne:       
         lda #GRAA
         sta farve
-        ldx #0        
 kolonnenavneLoekke:
         clc
         lda bitnummer
-        adc #NUL
+        adc #NUL - 1
         sta tegnvaerdi
         jsr tegnPaaSkaerm
-        inc bitnummer
+        lda #1
+        sta adresseforskydning
+        jsr adderAdresser8bit
+        dec bitnummer
         lda bitnummer
-        cmp #8
-        bne hovedprgA
+        cmp #0
+        bne kolonnenavneLoekke
 
 opsaetningB:
-        lda #0
+        jsr hentTegnOgFarveAdresser
+        lda #80
+        sta adresseforskydning
+        jsr adderAdresser8bit
+        lda #8
         sta bitnummer
-        lda #RAEKKENR + 2
-        sta raekkenr
-        lda LAGERADRESSE
+        lda STYREPIND2ADRESSE
         sta aflaestLageradresse
-hovedprgB:
-        jsr nulstilSkaermafsaet
-        jsr beregnSkaermafsaet
-        jsr kopierSkaermafsaet
-        jsr adderTegnadrBegynd
-        jsr adderFarveadrBegynd
-kolonneindhold:       
         lda #HVID
         sta farve
-        ldx #0        
 kolonneindholdLoekke:
-        clc
-        lda bitnummer
-        adc #NUL
-
         lda aflaestLageradresse
-        and #%00000001
+        and #%10000000
+        jsr lsr7
+        clc
         adc #NUL
         sta tegnvaerdi
         jsr tegnPaaSkaerm
-        lsr aflaestLageradresse
-        inc bitnummer
+        asl aflaestLageradresse
+        lda #1
+        sta adresseforskydning
+        jsr adderAdresser8bit
+        dec bitnummer
         lda bitnummer
-        cmp #8
-        bne hovedprgB
-
+        cmp #0
+        bne kolonneindholdLoekke
         jmp opsaetningB
         
         rts
@@ -80,6 +70,33 @@ kolonneindholdLoekke:
         // ***********************************
         // *** H J A E L P E R U T I N E R ***
         // ***********************************
+beregnTegnOgFarveAdresser:      
+        jsr nulstilSkaermafsaet
+        jsr beregnSkaermafsaet
+        jsr kopierSkaermafsaet
+        jsr adderTegnadrBegynd
+        jsr adderFarveadrBegynd
+        rts
+gemTegnOgFarveAdresser:
+        lda $FB
+        sta gemtFB
+        lda $FC
+        sta gemtFC
+        lda $FD
+        sta gemtFD
+        lda $FE
+        sta gemtFE
+        rts
+hentTegnOgFarveAdresser:
+        lda gemtFB
+        sta $FB
+        lda gemtFC
+        sta $FC
+        lda gemtFD
+        sta $FD
+        lda gemtFE
+        sta $FE
+        rts
 nulstilSkaermafsaet:
         lda #$00
         sta $FB
@@ -89,16 +106,14 @@ nulstilSkaermafsaet:
 beregnSkaermafsaet:
         ldx #0
 adderRaekker:
-        cpx raekkenr
+        cpx #RAEKKENR
         beq adderKolonne
         lda #40
         jsr adder8bitTal
         inx
         jmp adderRaekker
 adderKolonne:   
-        sec
         lda #KOLONNENR
-        sbc bitnummer
         jsr adder8bitTal
         rts
 adder8bitTal:
@@ -127,12 +142,36 @@ adderFarveadrBegynd:
         adc $FE
         sta $FE
         rts
+adderAdresser8bit:
+        clc
+        lda adresseforskydning
+        adc $FB
+        sta $FB
+        lda #0
+        adc $FC
+        sta $FC
+        clc
+        lda adresseforskydning
+        adc $FD
+        sta $FD
+        lda #0
+        adc $FE
+        sta $FE
+        rts
 tegnPaaSkaerm:
         lda tegnvaerdi
         ldy #0
         sta ($FB),y
         lda farve
         sta ($FD),y
+        rts
+lsr7:
+        ldx #0
+lsrloekke:      
+        lsr
+        inx
+        cpx #7
+        bne lsrloekke
         rts
 
         // ***************
@@ -141,5 +180,9 @@ tegnPaaSkaerm:
 bitnummer:             .byte 0
 farve:                 .byte HVID
 tegnvaerdi:            .byte 0
-raekkenr:              .byte 0
 aflaestLageradresse:   .byte 0
+adresseforskydning:    .byte 0
+gemtFB:                .byte 0
+gemtFC:                .byte 0
+gemtFD:                .byte 0
+gemtFE:                .byte 0

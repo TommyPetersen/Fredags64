@@ -29,5 +29,32 @@ Til afsnit 15 (Styrepind):
 	o Bevæg peitr-spritteren med styrepind.
 	o Undersøg muligheden for animering af peitr-spritteren når den bevæges.
 
+C64-skærmen:
+============
+40 x 25 = 1000 = 0x3E8
+40 = 0x28
+----------------------
+Række1:
+	$0400:	48
+	$0401:	48
+	$0402:	48
+	...
+	$0427:	48
+Række2:
+	$0428:	48
+	$0429:	48	$FC = 0x04, $FB = 0x29
+	$042A:	48
+	...
+	$044F:	48
+...
+Række25:
+	$07C0:	48
+	$07C1:	48
+	$07C2:	48
+	...
+	$07E7:	48
+
+
+
 
 

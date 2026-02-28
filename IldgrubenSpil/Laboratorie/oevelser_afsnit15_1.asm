@@ -48,10 +48,10 @@ opsaetningB:
         lda #HVID
         sta farve
 kolonneindholdLoekke:
+        clc
         lda aflaestLageradresse
         and #%10000000
         jsr lsr7
-        clc
         adc #NUL
         sta tegnvaerdi
         jsr tegnPaaSkaerm
@@ -172,6 +172,7 @@ lsrloekke:
         inx
         cpx #7
         bne lsrloekke
+        clc
         rts
 
         // ***************

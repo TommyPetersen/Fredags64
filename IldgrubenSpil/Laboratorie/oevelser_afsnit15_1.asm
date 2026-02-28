@@ -78,30 +78,30 @@ beregnTegnOgFarveAdresser:
         jsr adderFarveadrBegynd
         rts
 gemTegnOgFarveAdresser:
-        lda $FB
-        sta gemtFB
-        lda $FC
-        sta gemtFC
-        lda $FD
-        sta gemtFD
-        lda $FE
-        sta gemtFE
+        lda aktuelTegnadresseLaveByte
+        sta gemtTegnadresseLaveByte
+        lda aktuelTegnadresseHoejeByte
+        sta gemtTegnadresseHoejeByte
+        lda aktuelFarveadresseLaveByte
+        sta gemtFarveadresseLaveByte
+        lda aktuelFarveadresseHoejeByte
+        sta gemtFarveadresseHoejeByte
         rts
 hentTegnOgFarveAdresser:
-        lda gemtFB
-        sta $FB
-        lda gemtFC
-        sta $FC
-        lda gemtFD
-        sta $FD
-        lda gemtFE
-        sta $FE
+        lda gemtTegnadresseLaveByte
+        sta aktuelTegnadresseLaveByte
+        lda gemtTegnadresseHoejeByte
+        sta aktuelTegnadresseHoejeByte
+        lda gemtFarveadresseLaveByte
+        sta aktuelFarveadresseLaveByte
+        lda gemtFarveadresseHoejeByte
+        sta aktuelFarveadresseHoejeByte
         rts
 nulstilSkaermafsaet:
         lda #$00
-        sta $FB
+        sta skaermafsaetLaveByte
         lda #$00
-        sta $FC
+        sta skaermafsaetLaveByte
         rts
 beregnSkaermafsaet:
         ldx #0
@@ -118,50 +118,62 @@ adderKolonne:
         rts
 adder8bitTal:
         clc
-        adc $FB
-        sta $FB
+        adc skaermafsaetLaveByte
+        sta skaermafsaetLaveByte
         lda #0
-        adc $FC
-        sta $FC
+        adc skaermafsaetHoejeByte
+        sta skaermafsaetHoejeByte
         rts
 kopierSkaermafsaet:
-        lda $FB
-        sta $FD
-        lda $FC
-        sta $FE
+        lda skaermafsaetLaveByte
+        sta aktuelTegnadresseLaveByte
+        lda skaermafsaetHoejeByte
+        sta aktuelTegnadresseHoejeByte
+        lda skaermafsaetLaveByte
+        sta aktuelFarveadresseLaveByte
+        lda skaermafsaetHoejeByte
+        sta aktuelFarveadresseHoejeByte
         rts
 adderTegnadrBegynd:
         clc
         lda #$04
-        adc $FC
-        sta $FC
+        adc aktuelTegnadresseHoejeByte
+        sta aktuelTegnadresseHoejeByte
         rts
 adderFarveadrBegynd:
         clc
         lda #$d8
-        adc $FE
-        sta $FE
+        adc aktuelFarveadresseHoejeByte
+        sta aktuelFarveadresseHoejeByte
         rts
 adderAdresser8bit:
         clc
         lda adresseforskydning
-        adc $FB
-        sta $FB
+        adc aktuelTegnadresseLaveByte
+        sta aktuelTegnadresseLaveByte
         lda #0
-        adc $FC
-        sta $FC
+        adc aktuelTegnadresseHoejeByte
+        sta aktuelTegnadresseHoejeByte
         clc
         lda adresseforskydning
-        adc $FD
-        sta $FD
+        adc aktuelFarveadresseLaveByte
+        sta aktuelFarveadresseLaveByte
         lda #0
-        adc $FE
-        sta $FE
+        adc aktuelFarveadresseHoejeByte
+        sta aktuelFarveadresseHoejeByte
         rts
 tegnPaaSkaerm:
-        lda tegnvaerdi
         ldy #0
+        lda aktuelTegnadresseLaveByte
+        sta $FB
+        lda aktuelTegnadresseHoejeByte
+        sta $FC
+        lda tegnvaerdi
         sta ($FB),y
+        lda aktuelFarveadresseLaveByte
+        sta $FD
+        lda aktuelFarveadresseHoejeByte
+        sta $FE
         lda farve
         sta ($FD),y
         rts
@@ -178,12 +190,19 @@ lsrloekke:
         // ***************
         // *** D A T A ***
         // ***************
-bitnummer:             .byte 0
-farve:                 .byte HVID
-tegnvaerdi:            .byte 0
-aflaestLageradresse:   .byte 0
-adresseforskydning:    .byte 0
-gemtFB:                .byte 0
-gemtFC:                .byte 0
-gemtFD:                .byte 0
-gemtFE:                .byte 0
+bitnummer:                      .byte 0
+farve:                          .byte HVID
+tegnvaerdi:                     .byte 0
+aflaestLageradresse:            .byte 0
+adresseforskydning:             .byte 0
+aktuelTegnadresseLaveByte:      .byte 0
+aktuelTegnadresseHoejeByte:     .byte 0
+aktuelFarveadresseLaveByte:     .byte 0
+aktuelFarveadresseHoejeByte:    .byte 0
+gemtTegnadresseLaveByte:        .byte 0
+gemtTegnadresseHoejeByte:       .byte 0
+gemtFarveadresseLaveByte:       .byte 0
+gemtFarveadresseHoejeByte:      .byte 0
+skaermafsaetLaveByte:           .byte 0
+skaermafsaetHoejeByte:          .byte 0
+

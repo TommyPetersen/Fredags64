@@ -101,7 +101,7 @@ nulstilSkaermafsaet:
         lda #$00
         sta skaermafsaetLaveByte
         lda #$00
-        sta skaermafsaetLaveByte
+        sta skaermafsaetHoejeByte
         rts
 beregnSkaermafsaet:
         ldx #0

@@ -26,8 +26,13 @@ Kladde
 Til afsnit 15 (Styrepind):
 
 	o Vis indhold af en given lageradresse som binært mønster.
-	o Bevæg peitr-spritteren med styrepind.
-	o Undersøg muligheden for animering af peitr-spritteren når den bevæges.
+	o Bevæg cellotron-spritteren med styrepind.
+	o Undersøg muligheden for animering af cellotron-spritteren når den bevæges.
+
+
+	Styrepind:	011 1 1111
+			876 5 4321
+
 
 C64-skærmen:
 ============

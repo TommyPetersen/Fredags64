@@ -82,13 +82,15 @@ ajourfoerSpritterkoordinater:
         ldy #1
         lda opsaetningsdata,x
         sta ($FB),y
-
+        
         rts       
 findBittype:
    bittype_HOEJRE: 
         lda bitnummer
         cmp #HOEJRE_BIT
         bne bittype_VENSTRE
+        lda #2
+        sta $d020
         clc
         ldx #0
         inc opsaetningsdata,x
@@ -96,6 +98,8 @@ findBittype:
         lda bitnummer
         cmp #VENSTRE_BIT
         bne bittype_NED
+        lda #3
+        sta $d020
         sec
         ldx #0
         dec opsaetningsdata,x
@@ -103,6 +107,8 @@ findBittype:
         lda bitnummer
         cmp #NED_BIT
         bne bittype_OP
+        lda #4
+        sta $d020
         clc
         ldx #1
         inc opsaetningsdata,x
@@ -110,6 +116,8 @@ findBittype:
         lda bitnummer
         cmp #OP_BIT
         bne findBittypeUd
+        lda #5
+        sta $d020
         sec
         ldx #1
         dec opsaetningsdata,x

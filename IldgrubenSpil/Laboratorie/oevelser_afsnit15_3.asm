@@ -102,6 +102,15 @@ ajourfoerSpritterkoordinater:
         rts
 
 findBittype:
+   bittype_KNAP: 
+        lda bitnummer
+        cmp #KNAP_BIT
+        bne bittype_HOEJRE
+        lda #HVID
+        sta $d020
+        ldx #16
+        lda #$80
+        sta opsaetningsdata,x
    bittype_HOEJRE: 
         lda bitnummer
         cmp #HOEJRE_BIT

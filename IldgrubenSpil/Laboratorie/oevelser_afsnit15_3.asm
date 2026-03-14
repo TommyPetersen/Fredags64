@@ -30,6 +30,9 @@ klargoering:
         jsr gemTegnOgFarveAdresser
         jsr klargoeringA
         rts
+        // ***********************************
+        // *** H J A E L P E R U T I N E R ***
+        // ***********************************
 klargoerSprittere:      
 hovedprg:
         cld
@@ -47,9 +50,6 @@ opsaetAspekter:
         cpy #3
         bne opsaetAspekter
         rts
-        // ***********************************
-        // *** H J A E L P E R U T I N E R ***
-        // ***********************************
 opsaetningsrutine:
         lda startadresserLaveByte,y
         sta $FB
@@ -73,38 +73,31 @@ ajourfoerSpritterkoordinater:
         lda bitmoenster
         cmp #0
         beq findBittype
-
         //Spritterkoordinater
         lda #$00
         sta $FB
         lda #$D0
         sta $FC
-        
         ldx #0
         ldy #0
         lda opsaetningsdata,x
         sta ($FB),y
-        
         ldx #1
         ldy #1
         lda opsaetningsdata,x
         sta ($FB),y
-
         //Moensteradresser
         lda #$F8
         sta $FB
         lda #$07
         sta $FC
-        
         ldx #16
         ldy #0
         lda opsaetningsdata,x
         sta ($FB),y
-        
         rts
-
 findBittype:
-   bittype_OP:        
+   bittype_OP:
         lda bitnummer
         cmp #OP_BIT
         bne bittype_NED
@@ -205,7 +198,7 @@ findBittypeUd:
 rensSkaerm:
         jsr RENS_SKAERM        
         rts
-
+        
 klargoeringA:
         lda #8
         sta bitnummer
@@ -264,9 +257,6 @@ kolonneindholdLoekke:
         jmp klargoeringB2
         rts
            
-        // ***********************************
-        // *** H J A E L P E R U T I N E R ***
-        // ***********************************
 beregnTegnOgFarveAdresser:      
         jsr nulstilSkaermafsaet
         jsr beregnSkaermafsaet
@@ -616,4 +606,3 @@ spritter8: // #$88
         .byte %11111111,%11111111,%11111111
         .byte %11111111,%11111111,%11111111
         .byte %00000000
-
